@@ -17,7 +17,7 @@ public class RabbitMqConfig {
     @Value("${rabbitMq.topic.queue.name}")
     private String queueName;
     @Value("${rabbitMq.topic.route.key.name}")
-    private String routingKeyName;
+    private String routingKey;
 
     @Bean
     public Queue queue() {
@@ -31,7 +31,7 @@ public class RabbitMqConfig {
 
     @Bean
     public Binding bind(Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder.bind(queue).to(topicExchange).with(routingKeyName);
+        return BindingBuilder.bind(queue).to(topicExchange).with(routingKey);
     }
 
     @Bean
@@ -41,7 +41,7 @@ public class RabbitMqConfig {
 
     @Bean
     public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate();
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
